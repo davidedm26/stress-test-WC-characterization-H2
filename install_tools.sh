@@ -2,7 +2,7 @@
 # install_tools.sh - Script per installare tutti gli strumenti necessari
 
 echo "=== INSTALLAZIONE STRUMENTI STRESS TEST ==="
-echo "Questo script installa: sar (sysstat), stress-ng, fio, nbody"
+echo "Questo script installa: sar (sysstat), stress-ng, fio"
 echo ""
 
 # Verifica se siamo su Ubuntu/Debian
@@ -27,21 +27,12 @@ sudo systemctl enable sysstat 2>/dev/null || echo "systemctl non disponibile, co
 sudo systemctl start sysstat 2>/dev/null || echo "systemctl non disponibile"
 
 # Installa stress-ng
-echo "🧠 Installazione stress-ng (stress memoria)..."
+echo "🧠 Installazione stress-ng (stress CPU/memoria/I/O)..."
 sudo apt install -y stress-ng
 
 # Installa fio
-echo "💾 Installazione fio (benchmark I/O)..."
+echo "💾 Installazione fio (benchmark I/O avanzato)..."
 sudo apt install -y fio
-
-# Installa nbody (se disponibile)
-echo "🌌 Installazione nbody (benchmark CPU)..."
-if apt-cache show nbody >/dev/null 2>&1; then
-    sudo apt install -y nbody
-else
-    echo "⚠️  nbody non disponibile nei repo ufficiali"
-    echo "   Installazione alternativa o usa stress-ng --cpu"
-fi
 
 echo ""
 echo "=== VERIFICA INSTALLAZIONI ==="
@@ -67,12 +58,17 @@ else
     echo "❌ fio: NON INSTALLATO"
 fi
 
-# Verifica nbody
-if command -v nbody >/dev/null 2>&1; then
-    echo "✅ nbody: Disponibile"
-else
-    echo "⚠️  nbody: NON DISPONIBILE (usa stress-ng --cpu come alternativa)"
-fi
+echo ""
+echo "=== STRUMENTI STRESS DISPONIBILI ==="
+echo "stress-ng può essere usato per:"
+echo "  • CPU stress:     stress-ng --cpu 4 --timeout 60s"
+echo "  • Memoria stress: stress-ng --vm 2 --vm-bytes 1G --timeout 60s"
+echo "  • I/O stress:     stress-ng --hdd 1 --timeout 60s"
+echo "  • Misto:          stress-ng --cpu 2 --vm 1 --hdd 1 --timeout 60s"
+echo ""
+echo "fio può essere usato per test I/O avanzati:"
+echo "  • Random read:    fio --name=test --rw=randread --size=1G"
+echo "  • Sequential:     fio --name=test --rw=write --size=1G"
 
 echo ""
 echo "=== ISTRUZIONI SUCCESSIVE ==="
