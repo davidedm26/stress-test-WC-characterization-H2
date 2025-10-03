@@ -27,11 +27,11 @@ sudo systemctl enable sysstat 2>/dev/null || echo "systemctl non disponibile, co
 sudo systemctl start sysstat 2>/dev/null || echo "systemctl non disponibile"
 
 # Installa stress-ng
-echo "🧠 Installazione stress-ng (stress CPU/memoria/I/O)..."
+echo "🧠 Installazione stress-ng (stress memoria)..."
 sudo apt install -y stress-ng
 
 # Installa fio
-echo "💾 Installazione fio (benchmark I/O avanzato)..."
+echo "💾 Installazione fio (benchmark I/O)..."
 sudo apt install -y fio
 
 echo ""
@@ -57,18 +57,6 @@ if command -v fio >/dev/null 2>&1; then
 else
     echo "❌ fio: NON INSTALLATO"
 fi
-
-echo ""
-echo "=== STRUMENTI STRESS DISPONIBILI ==="
-echo "stress-ng può essere usato per:"
-echo "  • CPU stress:     stress-ng --cpu 4 --timeout 60s"
-echo "  • Memoria stress: stress-ng --vm 2 --vm-bytes 1G --timeout 60s"
-echo "  • I/O stress:     stress-ng --hdd 1 --timeout 60s"
-echo "  • Misto:          stress-ng --cpu 2 --vm 1 --hdd 1 --timeout 60s"
-echo ""
-echo "fio può essere usato per test I/O avanzati:"
-echo "  • Random read:    fio --name=test --rw=randread --size=1G"
-echo "  • Sequential:     fio --name=test --rw=write --size=1G"
 
 echo ""
 echo "=== ISTRUZIONI SUCCESSIVE ==="

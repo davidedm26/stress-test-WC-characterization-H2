@@ -37,13 +37,13 @@ fi
 
 echo ""
 
-# Test nbody
-echo "🌌 Test nbody (CPU, 2 secondi):"
-if command -v nbody >/dev/null 2>&1; then
-    timeout 3 nbody -t 2 -b 100 >/dev/null 2>&1
-    echo "✅ nbody: OK"
+# Test stress-ng CPU
+echo "🔥 Test stress-ng CPU (matrix, 2 secondi):"
+if command -v stress-ng >/dev/null 2>&1; then
+    timeout 3 stress-ng --cpu 2 --cpu-method matrix --timeout 2 >/dev/null 2>&1
+    echo "✅ stress-ng CPU: OK"
 else
-    echo "⚠️  nbody: NON TROVATO (usa stress-ng --cpu)"
+    echo "❌ stress-ng CPU: NON TROVATO"
 fi
 
 echo ""

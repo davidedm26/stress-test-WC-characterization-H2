@@ -43,12 +43,12 @@ def analyze_sar_data(csv_file):
 
     # Plot fasi
     phases = [
-        (0, 600, 'CPU + MEM'),
-        (600, 1200, 'CPU + I/O'),
+        (0, 600, 'CPU (matrix) + MEM'),
+        (600, 1200, 'CPU (fft) + I/O'),
         (1200, 1800, 'MEM + I/O'),
-        (1800, 2400, 'CPU + MEM (var)'),
-        (2400, 3000, 'All Three'),
-        (3000, 3600, 'CPU + I/O (heavy)')
+        (1800, 2400, 'CPU (ackermann) + MEM'),
+        (2400, 3000, 'CPU (fibonacci) + MEM + I/O'),
+        (3000, 3600, 'CPU (callfunc) + I/O')
     ]
 
     plt.figure(figsize=(15, 10))

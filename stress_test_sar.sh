@@ -16,7 +16,6 @@ echo "" | tee -a "$LOG_FILE"
 check_tools() {
     local missing=""
     command -v sar >/dev/null 2>&1 || missing="$missing sar(sysstat)"
-    command -v nbody >/dev/null 2>&1 || missing="$missing nbody"
     command -v stress-ng >/dev/null 2>&1 || missing="$missing stress-ng"
     command -v fio >/dev/null 2>&1 || missing="$missing fio"
 
@@ -40,15 +39,15 @@ SAR_CSV_PID=$!
 
 # Fase 1: CPU + MEM (10 minuti)
 echo "$(date): FASE 1 - CPU + MEM (10 min)" | tee -a "$LOG_FILE"
-echo "CPU: nbody x2 (600 corpi) | MEM: stress-ng --vm 3 (1.5GB)" | tee -a "$LOG_FILE"
-for i in {1..2}; do nbody -t 600 -b 600 & done &
+echo "CPU: stress-ng --cpu 4 (matrix) | MEM: stress-ng --vm 3 (1.5GB)" | tee -a "$LOG_FILE"
+stress-ng --cpu 4 --cpu-method matrix --timeout 600 &
 stress-ng --vm 3 --vm-bytes 1.5G --timeout 600
 echo "$(date): Fase 1 completata" | tee -a "$LOG_FILE"
 
 # Fase 2: CPU + I/O (10 minuti)
 echo "$(date): FASE 2 - CPU + I/O (10 min)" | tee -a "$LOG_FILE"
-echo "CPU: nbody x2 (500 corpi) | I/O: fio randread (2 job, 100MB)" | tee -a "$LOG_FILE"
-for i in {1..2}; do nbody -t 600 -b 500 & done &
+echo "CPU: stress-ng --cpu 4 (fft) | I/O: fio randread (2 job, 100MB)" | tee -a "$LOG_FILE"
+stress-ng --cpu 4 --cpu-method fft --timeout 600 &
 fio --name=randread --rw=randread --bs=4k --size=100M --numjobs=2 --runtime=600 --time_based
 echo "$(date): Fase 2 completata" | tee -a "$LOG_FILE"
 
@@ -61,23 +60,23 @@ echo "$(date): Fase 3 completata" | tee -a "$LOG_FILE"
 
 # Fase 4: CPU + MEM variante (10 minuti)
 echo "$(date): FASE 4 - CPU + MEM variante (10 min)" | tee -a "$LOG_FILE"
-echo "CPU: nbody x3 (400 corpi) | MEM: stress-ng --vm 2 (2GB)" | tee -a "$LOG_FILE"
-for i in {1..3}; do nbody -t 600 -b 400 & done &
+echo "CPU: stress-ng --cpu 6 (ackermann) | MEM: stress-ng --vm 2 (2GB)" | tee -a "$LOG_FILE"
+stress-ng --cpu 6 --cpu-method ackermann --timeout 600 &
 stress-ng --vm 2 --vm-bytes 2G --timeout 600
 echo "$(date): Fase 4 completata" | tee -a "$LOG_FILE"
 
 # Fase 5: Tutti e tre (10 minuti)
 echo "$(date): FASE 5 - Tutti e tre (10 min)" | tee -a "$LOG_FILE"
-echo "CPU: nbody x1 (300 corpi) | MEM: stress-ng --vm 2 (800MB) | I/O: fio light (2 job, 50MB)" | tee -a "$LOG_FILE"
-nbody -t 600 -b 300 &
+echo "CPU: stress-ng --cpu 2 (fibonacci) | MEM: stress-ng --vm 2 (800MB) | I/O: fio light (2 job, 50MB)" | tee -a "$LOG_FILE"
+stress-ng --cpu 2 --cpu-method fibonacci --timeout 600 &
 stress-ng --vm 2 --vm-bytes 800M --timeout 600 &
 fio --name=light --rw=randread --bs=4k --size=50M --numjobs=2 --runtime=600 --time_based
 echo "$(date): Fase 5 completata" | tee -a "$LOG_FILE"
 
 # Fase 6: CPU + I/O variante pesante (10 minuti)
 echo "$(date): FASE 6 - CPU + I/O variante pesante (10 min)" | tee -a "$LOG_FILE"
-echo "CPU: nbody x3 (350 corpi) | I/O: fio heavy mixed (4 job, 200MB)" | tee -a "$LOG_FILE"
-for i in {1..3}; do nbody -t 600 -b 350 & done &
+echo "CPU: stress-ng --cpu 6 (callfunc) | I/O: fio heavy mixed (4 job, 200MB)" | tee -a "$LOG_FILE"
+stress-ng --cpu 6 --cpu-method callfunc --timeout 600 &
 fio --name=heavy --rw=randrw --rwmixread=60 --bs=4k --size=200M --numjobs=4 --runtime=600 --time_based
 echo "$(date): Fase 6 completata" | tee -a "$LOG_FILE"
 
